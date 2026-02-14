@@ -39,28 +39,60 @@ spec:
           spec:
             description: spec defines the desired state of EC2instance
             properties:
-              addionalstorage:
-                items:
-                  type: object
-                type: array
-              amiID:
-                description: foo is an example field of EC2instance. Edit ec2instance_types.go
-                  to remove/update
+              amiid:
                 type: string
-              sshKey:
+              associateip:
+                type: boolean
+              availibilityzone:
+                type: string
+              instancetype:
+                type: string
+              keypair:
+                type: string
+              region:
+                type: string
+              securitygroups:
                 type: string
               storage:
+                properties:
+                  additionalvolumes:
+                    items:
+                      properties:
+                        devicename:
+                          type: string
+                        encrypted:
+                          type: boolean
+                        size:
+                          type: integer
+                        type:
+                          type: string
+                      type: object
+                    type: array
+                  rootvolume:
+                    properties:
+                      devicename:
+                        type: string
+                      encrypted:
+                        type: boolean
+                      size:
+                        type: integer
+                      type:
+                        type: string
+                    type: object
                 type: object
+              subnet:
+                type: string
               tags:
                 additionalProperties:
                   type: string
                 type: object
-              type:
+              userdata:
                 type: string
             required:
-            - sshKey
-            - storage
-            - type
+            - amiid
+            - instancetype
+            - securitygroups
+            - subnet
             type: object
           status:
             description: status defines the observed state of EC2instance

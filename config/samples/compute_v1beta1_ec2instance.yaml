@@ -1,9 +1,43 @@
 apiVersion: compute.cloud.com/v1beta1
 kind: EC2instance
 metadata:
-  labels:
-    app.kubernetes.io/name: operator
-    app.kubernetes.io/managed-by: kustomize
-  name: ec2instance-sample
+  name: n-ec2instance-sample
 spec:
-  # TODO(user): Add fields here
+  instancetype: t3.large
+  amiid: ami-0abc1234def567890
+  region: ap-south-1
+  availibilityzone: ap-south-1a
+  keypair: my-keypair
+  securitygroups: sg-0123456789abcdef0
+  subnet: subnet-0123456789abcdef0
+  associateip: true
+
+  userdata: |
+    #!/bin/bash
+    yum update -y
+    yum install -y docker
+    systemctl enable docker
+    systemctl start docker
+
+  tags:
+    Name: sample-ec2-instance
+    Environment: dev
+    Owner: anand
+
+  storage:
+    rootvolume:
+      size: 50
+      type: gp3
+      devicename: /dev/xvda
+      encrypted: true
+
+    additionalvolumes:
+      - size: 100
+        type: gp3
+        devicename: /dev/xvdb
+        encrypted: true
+
+      - size: 200
+        type: io2
+        devicename: /dev/xvdc
+        encrypted: true

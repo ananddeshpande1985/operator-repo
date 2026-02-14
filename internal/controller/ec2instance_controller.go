@@ -18,10 +18,12 @@ package controller
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	error "sigs.k8s.io/controller-runtime/pkg/client/error"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	computev1beta1 "github.com/ananddeshpande1985/operator-repo/api/v1beta1"
@@ -47,9 +49,21 @@ type EC2instanceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.22.4/pkg/reconcile
 func (r *EC2instanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = logf.FromContext(ctx)
+	l := logf.FromContext(ctx)
 
-	// TODO(user): your logic here
+	ec2instace := &computev1beta1.EC2instance{}
+
+	l.Info("Running the reconsiler loop for the EC2instance resource")
+	if err := r.Get(ctx, req.NamespacedName, ec2instace); err != nil {
+		if error.IsnotFound(err) {
+			l.Info("EC2instance resource not found. Ignoring since object must be deleted")
+			return ctrl.Result{}, nil
+		}
+		l.Error(err, "Failed to get EC2instance")
+		return ctrl.Result{}, err
+	}
+
+	fmt.Println("Name of the EC2 instance is", ec2instace.Name)
 
 	return ctrl.Result{}, nil
 }

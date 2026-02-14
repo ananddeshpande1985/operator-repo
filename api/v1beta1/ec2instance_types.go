@@ -25,25 +25,28 @@ import (
 
 // EC2instanceSpec defines the desired state of EC2instance
 type EC2instanceSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
-	// foo is an example field of EC2instance. Edit ec2instance_types.go to remove/update
-	// +optional
-	AMIID             string            `json:"amiID"`
-	SSHKey            string            `json:"sshKey"`
-	Type              string            `json:"type"`
-	Tags              map[string]string `json:"tags,omitempty"`
-	Storage           StorageConfig     `json:"storage"`
-	AddiitonalStorage []StorageConfig   `json:"addionalstorage,omitempty"`
+	InstanceType     string            `json:"instancetype"`
+	AMIId            string            `json:"amiid"`
+	Region           string            `json:"region,omitempty"`
+	AvailibilityZone string            `json:"availibilityzone,omitempty"`
+	Keypair          string            `json:"keypair,omitempty"`
+	SecurityGroups   string            `json:"securitygroups"`
+	Subnet           string            `json:"subnet"`
+	UserData         string            `json:"userdata,omitempty"`
+	Tags             map[string]string `json:"tags,omitempty"`
+	Storage          StorageConfig     `json:"storage,omitempty"`
+	AssociateIP      bool              `json:"associateip,omitempty"`
 }
 
 type StorageConfig struct {
-	name        string
-	storagetype string
-	size        int64
+	RootVolume        StorageVolume   `json:"rootvolume,omitempty"`
+	AdditionalVolumes []StorageVolume `json:"additionalvolumes,omitempty"`
+}
+type StorageVolume struct {
+	Size       int    `json:"size,omitempty"`
+	Type       string `json:"type,omitempty"`
+	DeviceName string `json:"devicename,omitempty"`
+	Encrypted  bool   `json:"encrypted,omitempty"`
 }
 
 // EC2instanceStatus defines the observed state of EC2instance.
